@@ -15,10 +15,10 @@ os.chdir(current_directory)
 
 # Run the main.py file and save its output to student_output_file
 try:
-    subprocess.run(["javac", "Main.java"], stderr=subprocess.PIPE, check=True, cwd=current_directory)
-    subprocess.run(["java", "Main"], stdout=open(student_output_file, "w+"), stderr=subprocess.PIPE, check=True, cwd=current_directory)
+    subprocess.run(["javac", "gym.Main.java"], stderr=subprocess.PIPE, check=True, cwd=current_directory)
+    subprocess.run(["java", "gym.Main"], stdout=open(student_output_file, "w+"), stderr=subprocess.PIPE, check=True, cwd=current_directory)
 except subprocess.CalledProcessError as e:
-    print(f"Error running Main.java: {e.stderr.decode('utf-8')}")
+    print(f"Error running gym.Main.java: {e.stderr.decode('utf-8')}")
     exit(1)
 
 # Compare the student's output to the correct output
