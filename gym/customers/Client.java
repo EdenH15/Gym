@@ -17,7 +17,7 @@ public class Client extends Person implements Observer {
         StringBuilder s= new StringBuilder("[");
         for (int i = 0; i <notifications.size() ; i++) {
             if(i>0){
-                s.append(",");
+                s.append(", ");
             }
             s.append(notifications.get(i));
         }
