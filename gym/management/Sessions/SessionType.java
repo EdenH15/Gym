@@ -25,7 +25,7 @@ public abstract class SessionType {
 
         @Override
         public String toString() {
-            return name + " (Price: " + price + "₪, Capacity: " + maxPerson + ")";
+            return name;
         }
 
     public static final SessionType Pilates = new Pilates();

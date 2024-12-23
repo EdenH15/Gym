@@ -31,5 +31,9 @@ public class Client extends Person implements Observer {
         return super.getName();
     }
 
+    public String toString(){
+    return "ID: "+ this.getID()+ " | Name: "+this.getName()+ " | Gender: "+this.getGender()+ " | Birthday: " +this.getBirth()+ " | Age: "+this.getAge()+ " | Balance: "+this.getMoney();
+}
+
 
 }

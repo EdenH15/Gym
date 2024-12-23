@@ -5,8 +5,6 @@ import gym.management.Instructor;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class Session {
     private final SessionType sessionType;
@@ -51,14 +49,15 @@ public class Session {
 
     public String getDate() {
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-
-        // הגדרת פורמט התאריך החדש
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-
-        // המרת התאריך לפורמט DateTime
         LocalDateTime dateTime = LocalDateTime.parse(this.date, inputFormatter);
+        return dateTime.format(outputFormatter);
+    }
+    public String getDateFormat() {
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
-        // המרת התאריך לפורמט הרצוי והחזרתו
+        LocalDateTime dateTime = LocalDateTime.parse(this.getDate(), inputFormatter);
         return dateTime.format(outputFormatter);
     }
     public String getOnlyTime(){
@@ -68,22 +67,25 @@ public class Session {
     public String getOnlyDate(){
         String[] arr = this.date.split(" ");
         return arr[0];
-
     }
 
     public Instructor getInst() {
         return inst;
     }
     public static boolean dateHasPassed(String date) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
         try {
-            Date parsedDate1 = formatter.parse(date);
-            Date currentDate = new Date();
-            return parsedDate1.before(currentDate);
+            LocalDateTime parsedDate1 = LocalDateTime.parse(date,formatter);
+            LocalDateTime currentDate = LocalDateTime.now();
+            return parsedDate1.isBefore(currentDate);
         } catch (Exception e) {
             //System.err.println("Error parsing date: " + e.getMessage());
             return false;
         }
+    }
+
+    public String toString(){
+        return "Session Type: " +this.sessionType.getName() +" | Date: "+this.getOnlyDate()+" "+this.getOnlyTime()+ " | Forum: "+this.getForumType()+ " | Instructor: "+this.getInst().getName()+ " | Participants: " +registeredClients.size()+"/"+this.getSessionType().getMaxPerson();
     }
 }

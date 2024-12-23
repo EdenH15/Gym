@@ -76,7 +76,9 @@ public class Secretary extends Person {
                 Session ses = new Session(sesType, date, fT, i);
                 g.addAllSes(ses);
                 g.addSesToInst(i);
+                g.addActionsHistory("Created new session: "+sesType.getName() +" on "+ ses.getDate()+  " with instructor: "+ i.getName());
                 return ses;
+
             }
         }
         throw new InstructorNotQualifiedException("Error: Instructor is not qualified to conduct this session type.");
@@ -94,17 +96,22 @@ public class Secretary extends Person {
                 flag=true;
                 g.addActionsHistory("Failed registration: Client doesn't meet the age requirements for this session (Seniors)");
             }
+            if (Session.dateHasPassed(s1.getDateFormat())){
+                flag=true;
+                g.addActionsHistory("Failed registration: Session is not in the future");
+            }
             if (s1.getForumType().equals(ForumType.Male)&&c1.getGender().equals(Gender.Female)||s1.getForumType().equals(ForumType.Female)&&c1.getGender().equals(Gender.Male)){
                 flag=true;
                 g.addActionsHistory("Failed registration: Client's gender doesn't match the session's gender requirements");
             }
-            if (Session.dateHasPassed(s1.getDate())){
-                flag=true;
-                g.addActionsHistory("Failed registration: Session is not in the future");
-            }
+
             if (c1.getMoney()<s1.getSessionType().getPrice()){
                 flag=true;
                 g.addActionsHistory("Failed registration: Client doesn't have enough balance");
+            }
+            if (s1.getRegisteredClients().size()==s1.getSessionType().getMaxPerson()){
+                g.addActionsHistory("Failed registration: No available spots for session");
+                flag=true;
             }
             if (!flag) {
                 s1.addClient(c1);
@@ -112,24 +119,25 @@ public class Secretary extends Person {
                 c1.setMoney(c1.getMoney() - sesPrice);
                 g.setGymBalance(g.getGymBalance() + sesPrice);
                 g.addAllObForDate(s1.getOnlyDate(), c1);
-                System.out.println("Registered client: " + c1.getName() + " to session: " + s1.getSessionType().getName() + " on " + s1.getDate() + " for price: " + s1.getSessionType().getPrice());
+                g.addActionsHistory("Registered client: " + c1.getName() + " to session: " + s1.getSessionType().getName() + " on " + s1.getDate() + " for price: " + s1.getSessionType().getPrice());
             }
             }
         }
     public void paySalaries() {
         isCurrentSecretary();
-        HashMap<Instructor, Integer> h = g.getHashInst();
-        int gymB = g.getGymBalance();
         for (int i = 0; i < g.getAllInst().size(); i++) {
             Instructor inst = g.getAllInst().get(i);
-            int m = h.get(inst);
-            int salary = m * inst.getSalary();
-            inst.setMoney(inst.getMoney() + salary); // pays the instructor it's salary
-            h.put(inst, 0);
+            int amount = g.getHashInst().get(inst);
+            int salary = amount * inst.getSalary();
+            inst.setMoney(inst.getMoney()+salary);// pays the instructor it's salary
+           // g.getHashInst().put(inst, 0);
+            int gymB = g.getGymBalance();
             g.setGymBalance(gymB - salary);
         }
-        this.setMoney(this.salary);
+        int gymB = g.getGymBalance();
+
         g.setGymBalance(gymB - this.salary);
+        g.addActionsHistory("Salaries have been paid to all employees");
 
     }
 
@@ -139,19 +147,22 @@ public class Secretary extends Person {
             System.out.println(s);
         }
     }
-
+    //A message was sent to everyone registered for session ThaiBoxing on 2025-01-01T14:00 : The instructor will be a few minutes late for the session
     public void notify(Session ses, String s) {
         isCurrentSecretary();
         for (Client client : ses.getRegisteredClients()) {
             client.newNotify(s);
         }
+        g.addActionsHistory("A message was sent to everyone registered for session "+ ses.getSessionType().getName()+ " on "+ ses.getDate()+ " : "+s);
     }
 
     public void notify(String date, String s) {
         isCurrentSecretary();
+
         for (Client client : g.getAllObForDate().get(date)) {
             client.newNotify(s);
         }
+        g.addActionsHistory("A message was sent to everyone registered for a session on "+g.changeDateFormat(date)+" : "+s);
     }
 
     public void notify(String s) {
@@ -159,6 +170,11 @@ public class Secretary extends Person {
         for (Observer observer : g.getAllC()) {
             observer.newNotify(s);
         }
+        g.addActionsHistory("A message was sent to all gym clients: "+s);
+    }
+    public String toString(){
+      return "ID: "+ this.getID()+ " | Name: "+this.getName()+ " | Gender: "+this.getGender()+ " | Birthday: " +this.getBirth()+ " | Age: "+this.getAge()+ " | Balance: "+this.getMoney()+ " | Role: Secretary | Salary per Month: "+this.salary;
+
     }
 }
 

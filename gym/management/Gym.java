@@ -5,9 +5,10 @@ import gym.customers.FactoryPerson;
 import gym.customers.Observer;
 import gym.customers.Person;
 import gym.management.Sessions.Session;
-
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.time.LocalDate;
 
 public class Gym {
     private static Gym instance;
@@ -19,8 +20,6 @@ public class Gym {
     private final ArrayList<Session> allSes;
     private final HashMap<Instructor,Integer> sesInst;
     private int gymBalance;
-
-
     private final HashMap<String,ArrayList<Client>> allObForDate;
 
 
@@ -138,5 +137,42 @@ public class Gym {
             allObForDate.get(date).add(c);
         }
     }
+    public String changeDateFormat(String date) {
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate = LocalDate.parse(date, inputFormatter);
+        return localDate.format(outputFormatter);
+    }
+
+    public String toString() {
+        StringBuilder allInf = new StringBuilder();
+        allInf.append("Gym Name: ").append(this.gymName).append("\n");
+        allInf.append("Gym Secretary: ").append(this.secretary.toString()).append("\n");
+        allInf.append("Gym Balance: ").append(this.gymBalance).append("\n\n");
+
+        allInf.append("Clients Data:\n");
+        for (Client client : this.allC) {
+            allInf.append(client.toString()).append("\n");
+        }
+
+
+        allInf.append("\nEmployees Data:\n");
+        for (Person employee : this.allInst) {
+            allInf.append(employee.toString()).append("\n");
+        }
+        allInf.append(this.secretary.toString()).append("\n");
+
+
+        allInf.append("\nSessions Data:\n");
+        for (int i = 0; i < this.allSes.size(); i++) {
+            if (i == this.allSes.size() - 1) {
+                allInf.append(allSes.get(i).toString());
+            } else {
+                allInf.append(allSes.get(i).toString()).append("\n");
+            }
+        }
+        return allInf.toString();
+    }
+
 
 }

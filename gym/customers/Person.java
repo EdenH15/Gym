@@ -1,5 +1,6 @@
 package gym.customers;
 
+import gym.Money;
 import gym.management.Gender;
 import gym.management.Gym;
 import java.time.LocalDate;
@@ -9,21 +10,20 @@ import java.time.format.DateTimeFormatter;
 public class Person implements Observer {
     private final String name;
     private final String birth;
-    private int money;
+    private Money money;
     private final Gender gender;
     private static int idCounter = 1111;
     private final int id;
 
 
+
     public Person(String name, int money, Gender g, String birth) {
         this.name = name;
-        this.money = money;
+        this.money = new Money(money);
         this.birth = birth;
         this.gender = g;
         this.id=idCounter;
         idCounter++;
-
-
     }
 
     public Person(Person p) {
@@ -44,10 +44,10 @@ public class Person implements Observer {
     }
 
     public int getMoney() {
-        return money;
+        return this.money.getPersonMoney();
     }
     public  void setMoney(int m){
-        this.money=m;
+        this.money.setPersonMoney(m);
     }
 
     public Gender getGender() {
