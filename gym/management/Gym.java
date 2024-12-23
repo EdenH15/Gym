@@ -50,7 +50,7 @@ public class Gym {
 //           this.secretary=null;
 //        }
        this.secretary = FactoryPerson.newSecretary(p,s);
-        addActionsHistory("A new secretary has started working at the gym:"+secretary.getName());
+        addActionsHistory("A new secretary has started working at the gym: "+secretary.getName());
     }
 
     public void setName(String name) {

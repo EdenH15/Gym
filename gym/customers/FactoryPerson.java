@@ -5,7 +5,6 @@ import gym.management.Secretary;
 import gym.management.Sessions.SessionType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class FactoryPerson {
 

@@ -3,7 +3,7 @@ package gym.management.Sessions;
 public class ThaiBoxing extends SessionType{
 
         public ThaiBoxing() {
-            super("Thai Boxing", 100, 20);
+            super("ThaiBoxing", 100, 20);
         }
 
 }

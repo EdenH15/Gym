@@ -1,7 +1,5 @@
 package gym.customers;
 
-import gym.management.Gender;
-import gym.management.Secretary;
 
 import java.util.ArrayList;
 

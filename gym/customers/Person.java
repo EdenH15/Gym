@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 public class Person implements Observer {
     private final String name;
     private final String birth;
-    private Money money;
+    private final Money money;
     private final Gender gender;
     private static int idCounter = 1111;
     private final int id;

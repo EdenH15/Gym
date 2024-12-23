@@ -11,8 +11,8 @@ import gym.customers.Person;
 import gym.management.Sessions.ForumType;
 import gym.management.Sessions.Session;
 import gym.management.Sessions.SessionType;
-
 import java.util.ArrayList;
+
 import java.util.HashMap;
 
 public class Secretary extends Person {
@@ -65,7 +65,7 @@ public class Secretary extends Person {
         Instructor newInst = FactoryPerson.newInstructor(p, salary, sesType);
         g.addSesToInst(newInst);
         g.addAllInst(newInst);
-        g.addActionsHistory("Hired new instructor:" + p.getName() + " with salary per hour: " + salary);
+        g.addActionsHistory("Hired new instructor: " + p.getName() + " with salary per hour: " + salary);
         return newInst;
     }
 
@@ -135,7 +135,7 @@ public class Secretary extends Person {
             g.setGymBalance(gymB - salary);
         }
         int gymB = g.getGymBalance();
-
+        this.setMoney(this.getMoney()+this.salary);
         g.setGymBalance(gymB - this.salary);
         g.addActionsHistory("Salaries have been paid to all employees");
 
