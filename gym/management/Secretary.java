@@ -13,25 +13,42 @@ import gym.management.Sessions.Session;
 import gym.management.Sessions.SessionType;
 import java.util.ArrayList;
 
-import java.util.HashMap;
-
+/**
+ * The Secretary class represents a gym secretary and provides methods for managing clients, instructors,
+ * sessions, payments, and sending notifications.
+ */
 public class Secretary extends Person {
     private final int salary;
     private final Gym g;
 
-
+    /**
+     * Constructor to initialize the Secretary with a Person and a salary.
+     * @param p The Person object representing the Secretary.
+     * @param s The monthly salary of the Secretary.
+     */
     public Secretary(Person p, int s) {
         super(p);
         this.salary = s;
         g = Gym.getInstance();
     }
 
+    /**
+     * Ensures the current instance is the gym's secretary.
+     * @throws NullPointerException if the current person is not the gym secretary.
+     */
     public void isCurrentSecretary()throws NullPointerException{
         if (!g.getSecretary().equalsPerson(this)){
             throw new NullPointerException();
         }
     }
 
+    /**
+     * Registers a new client if not already registered and meets the minimum age requirement.
+     * @param p2 The Person object representing the client.
+     * @return The newly registered Client.
+     * @throws DuplicateClientException if the client is already registered.
+     * @throws InvalidAgeException if the client is under 18 years old.
+     */
     public Client registerClient(Person p2) throws DuplicateClientException, InvalidAgeException {
         isCurrentSecretary();
         if (formerClient(p2)) {
@@ -46,6 +63,11 @@ public class Secretary extends Person {
         }
     }
 
+    /**
+     * Unregisters an existing client from the gym.
+     * @param c2 The Client to be unregistered.
+     * @throws ClientNotRegisteredException if the client is not registered.
+     */
     public void unregisterClient(Client c2) throws ClientNotRegisteredException {
         isCurrentSecretary();
         if (!formerClient(c2)) {
@@ -60,6 +82,13 @@ public class Secretary extends Person {
         }
     }
 
+    /**
+     * Hires a new instructor and assigns session types they are qualified to teach.
+     * @param p The Person object representing the Instructor.
+     * @param salary The salary of the Instructor.
+     * @param sesType The session types the instructor is qualified to teach.
+     * @return The newly hired Instructor.
+     */
     public Instructor hireInstructor(Person p, int salary, ArrayList<SessionType> sesType) {
         isCurrentSecretary();
         Instructor newInst = FactoryPerson.newInstructor(p, salary, sesType);
@@ -69,6 +98,15 @@ public class Secretary extends Person {
         return newInst;
     }
 
+    /**
+     * Adds a new session with a qualified instructor.
+     * @param sesType The type of the session.
+     * @param date The date of the session.
+     * @param fT The forum type (e.g., male, female, seniors).
+     * @param i The instructor conducting the session.
+     * @return The created Session.
+     * @throws InstructorNotQualifiedException if the instructor is not qualified for the session.
+     */
     public Session addSession(SessionType sesType, String date, ForumType fT, Instructor i) throws InstructorNotQualifiedException {
         isCurrentSecretary();
         for (int j = 0; j < i.getSessionType().size(); j++) {
@@ -84,6 +122,13 @@ public class Secretary extends Person {
         throw new InstructorNotQualifiedException("Error: Instructor is not qualified to conduct this session type.");
     }
 
+    /**
+     * Registers a client to a session after checking several conditions like age, balance, session availability, etc.
+     * @param c1 The Client to register.
+     * @param s1 The Session the client is enrolling in.
+     * @throws ClientNotRegisteredException if the client is not registered with the gym.
+     * @throws DuplicateClientException if the client is already registered for the session.
+     */
     public void registerClientToLesson(Client c1, Session s1) throws ClientNotRegisteredException, DuplicateClientException {
         isCurrentSecretary();
         boolean flag=false;
@@ -121,16 +166,18 @@ public class Secretary extends Person {
                 g.addAllObForDate(s1.getOnlyDate(), c1);
                 g.addActionsHistory("Registered client: " + c1.getName() + " to session: " + s1.getSessionType().getName() + " on " + s1.getDate() + " for price: " + s1.getSessionType().getPrice());
             }
-            }
         }
+    }
+    /**
+     * Pays the salaries of all instructors and the secretary.
+     */
     public void paySalaries() {
         isCurrentSecretary();
         for (int i = 0; i < g.getAllInst().size(); i++) {
             Instructor inst = g.getAllInst().get(i);
             int amount = g.getHashInst().get(inst);
             int salary = amount * inst.getSalary();
-            inst.setMoney(inst.getMoney()+salary);// pays the instructor it's salary
-           // g.getHashInst().put(inst, 0);
+            inst.setMoney(inst.getMoney()+salary);// pays the instructor its salary
             int gymB = g.getGymBalance();
             g.setGymBalance(gymB - salary);
         }
@@ -141,13 +188,21 @@ public class Secretary extends Person {
 
     }
 
+    /**
+     * Prints all the actions recorded in the gym's action history.
+     */
     public void printActions() {
         isCurrentSecretary();
         for (String s : g.getActionsHistory()) {
             System.out.println(s);
         }
     }
-    //A message was sent to everyone registered for session ThaiBoxing on 2025-01-01T14:00 : The instructor will be a few minutes late for the session
+
+    /**
+     * Sends a notification to all clients registered for a specific session.
+     * @param ses The session for which clients will be notified.
+     * @param s The message to be sent.
+     */
     public void notify(Session ses, String s) {
         isCurrentSecretary();
         for (Client client : ses.getRegisteredClients()) {
@@ -156,15 +211,23 @@ public class Secretary extends Person {
         g.addActionsHistory("A message was sent to everyone registered for session "+ ses.getSessionType().getName()+ " on "+ ses.getDate()+ " : "+s);
     }
 
+    /**
+     * Sends a notification to all clients registered for sessions on a specific date.
+     * @param date The date for which clients will be notified.
+     * @param s The message to be sent.
+     */
     public void notify(String date, String s) {
         isCurrentSecretary();
-
         for (Client client : g.getAllObForDate().get(date)) {
             client.newNotify(s);
         }
         g.addActionsHistory("A message was sent to everyone registered for a session on "+g.changeDateFormat(date)+" : "+s);
     }
 
+    /**
+     * Sends a notification to all clients of the gym.
+     * @param s The message to be sent.
+     */
     public void notify(String s) {
         isCurrentSecretary();
         for (Observer observer : g.getAllC()) {
@@ -172,11 +235,16 @@ public class Secretary extends Person {
         }
         g.addActionsHistory("A message was sent to all gym clients: "+s);
     }
-    public String toString(){
-      return "ID: "+ this.getID()+ " | Name: "+this.getName()+ " | Gender: "+this.getGender()+ " | Birthday: " +this.getBirth()+ " | Age: "+this.getAge()+ " | Balance: "+this.getMoney()+ " | Role: Secretary | Salary per Month: "+this.salary;
 
+    /**
+     * Provides a string representation of the Secretary, including personal details and salary.
+     * @return A string representation of the Secretary.
+     */
+    public String toString(){
+        return "ID: "+ this.getID()+ " | Name: "+this.getName()+ " | Gender: "+this.getGender()+ " | Birthday: " +this.getBirth()+ " | Age: "+this.getAge()+ " | Balance: "+this.getMoney()+ " | Role: Secretary | Salary per Month: "+this.salary;
     }
 }
+
 
 
 

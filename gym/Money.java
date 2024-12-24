@@ -1,6 +1,10 @@
 package gym;
 
 public class Money {
+
+    /**
+     * A helper class to handle all balances for every person in the gym system.
+     */
     private int personMoney;
 
 
