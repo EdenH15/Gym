@@ -111,6 +111,19 @@ public class Person {
         Period age = Period.between(birthDate, dateNow);
         return age.getYears();
     }
-}
+    /**
+     * Returns a string representation of the client's details.
+     * @return A string containing the client's details.
+     */
+    public String toString(){
+        return  "ID: " + this.getID() +
+                " | Name: " + this.getName() +
+                " | Gender: " + this.getGender() +
+                " | Birthday: " + this.getBirth() +
+                " | Age: " + this.getAge() +
+                " | Balance: " + this.getMoney();
+    }
+    }
+
 
 

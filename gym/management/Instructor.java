@@ -32,22 +32,6 @@ public class Instructor extends Person {
     public ArrayList<SessionType> getSessionType() {
         return sessionType;
     }
-
-    /**
-     * Returns a string representation of the instructor's details.
-     * @return A formatted string containing the instructor's details.
-     */
-    public String toString() {
-        return "ID: " + this.getID() +
-                " | Name: " + this.getName() +
-                " | Gender: " + this.getGender() +
-                " | Birthday: " + this.getBirth() +
-                " | Age: " + this.getAge() +
-                " | Balance: " + this.getMoney() +
-                " | Role: Instructor | Salary per Hour: " + this.salary +
-                " | Certified Classes: " + arrS(sessionType);
-    }
-
     /**
      * Converts a list of session types into a comma-separated string.
      * @param arr The list of session types.
@@ -61,5 +45,17 @@ public class Instructor extends Person {
         str.append(arr.getLast().toString());
         return str.toString();
     }
+
+    /**
+     * Returns a string representation of the instructor's details.
+     * @return A formatted string containing the instructor's details.
+     */
+    public String toString() {
+        return super.toString()+
+                " | Role: Instructor | Salary per Hour: " + this.salary +
+                " | Certified Classes: " + arrS(sessionType);
+    }
+
+
 }
 

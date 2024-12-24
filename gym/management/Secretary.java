@@ -241,7 +241,9 @@ public class Secretary extends Person {
      * @return A string representation of the Secretary.
      */
     public String toString(){
-        return "ID: "+ this.getID()+ " | Name: "+this.getName()+ " | Gender: "+this.getGender()+ " | Birthday: " +this.getBirth()+ " | Age: "+this.getAge()+ " | Balance: "+this.getMoney()+ " | Role: Secretary | Salary per Month: "+this.salary;
+
+        return super.toString()+" | Role: Secretary | Salary per Month: "+this.salary;
+                //"ID: "+ this.getID()+ " | Name: "+this.getName()+ " | Gender: "+this.getGender()+ " | Birthday: " +this.getBirth()+ " | Age: "+this.getAge()+ " | Balance: "+this.getMoney()+ " | Role: Secretary | Salary per Month: "+this.salary;
     }
 }
 

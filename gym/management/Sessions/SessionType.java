@@ -34,3 +34,5 @@ public abstract class SessionType {
     public static final SessionType Ninja = new Ninja();
     }
 
+
+
